@@ -3,7 +3,8 @@ import json
 from collections import OrderedDict
 import pprint
 
-url = 'https://nearnoah.net/api/showUserData.json?username=221sdvx'
+username = '221sdvx'
+url = 'https://nearnoah.net/api/showUserData.json?username=' + username
 
 response = requests.get(url)
 
@@ -20,13 +21,19 @@ difficulty = 19
 # 難易度の名前一覧の配列
 diff_rank = ['novice', 'advanced', 'exhaust', 'infinite', 'gravity', 'heavenly', 'vivid', 'maximum']
 
+scorebox = []
 for i in range(len(trackdata)):
     tmp = trackdata[i]
     for j in range(len(diff_rank)):
         if(diff_rank[j] in tmp):
             tmp_dif = tmp[diff_rank[j]]
+            scorebox_cell = []
             if('score' in tmp_dif and tmp[diff_rank[j]]['level'] == difficulty):
-                print(tmp['title'] + ' : ' + str(tmp[diff_rank[j]]['score']))
+                scorebox_cell.append(tmp['title'])
+                scorebox_cell.append(tmp[diff_rank[j]]['score'])
+                scorebox.append(scorebox_cell)
+                # print(tmp['title'] + ' : ' + str(tmp[diff_rank[j]]['score']))
 
+print(scorebox)
 # 綺麗な形式でjsonを出してくれるやつ
 # pprint.pprint(trackdata, width=40)
