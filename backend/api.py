@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, request, session
 from flask_restful import Api, Resource
 import json
+import test
 
 # postされたテキストをカウントするapi(POSTメソッド)
 text_count_bp = Blueprint('text_count', __name__, url_prefix='/api/post')
@@ -10,8 +11,9 @@ class TextCount(Resource):
         # postされたデータを読み込み
         input_data = request.json
 
-        # 入力文字列の文字数をカウント
-        result_data = {'text':input_data['text'], 'count':len(input_data['text'])}
+        result_data = test.run_selection(input_data['user1'], input_data['user2'], input_data['difficulty'], input_data['gap'])
+
+        print(result_data)
 
         return jsonify(result_data)
 

@@ -6,14 +6,28 @@
           <v-textarea
           outlined
           name="input-7-4"
-          label="テキストを入力してください"
-          v-model="InputText"
+          label="自分のユーザーID"
+          v-model="InputUser1"
         ></v-textarea>
         <v-textarea
           outlined
           name="input-7-4"
-          label="テキストを入力してください"
-          v-model="InputText2"
+          label="ライバルのユーザーID"
+          v-model="InputUser2"
+        ></v-textarea>
+        <v-textarea
+          outlined
+          name="input-7-4"
+          label="選択する難易度"
+          v-model="InputDifficulty"
+          type="number"
+        ></v-textarea>
+        <v-textarea
+          outlined
+          name="input-7-4"
+          label="スコア差"
+          v-model="InputScoreGap"
+          type="number"
         ></v-textarea>
         </v-col>
         <v-col cols="2">
@@ -39,8 +53,8 @@
                 :key="item.title"
               >
                 <v-list-item-content>
-                  <v-list-item-title >{{ item.count }}文字です</v-list-item-title>
-                  <v-list-item-subtitle> {{ item.text }} </v-list-item-subtitle>
+                  <v-list-item-title >{{ item.title }}</v-list-item-title>
+                  <v-list-item-subtitle> {{ item.gap }} </v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
               <v-divider
@@ -65,18 +79,23 @@ export default {
   data () {
     return {
       // 入力データ
-      InputText: '',
-      TextLength: null,
+      InputUser1: '221sdvx',
+      InputUser2: 'ddr_das',
+      InputDifficulty: '19',
+      InputScoreGap: '30000',
       items: []
     }
   },
 
   methods: {
     SendData: function () {
-      var data = { text: this.InputText }
+      var data = { user1: this.InputUser1,
+       user2: this.InputUser2,
+       difficulty: this.InputDifficulty,
+       gap: this.InputScoreGap}
 
       axios
-        .post('/api/post', data)
+        .post('/post', data)
         .then(response => {
           this.items.push(response.data)
         })

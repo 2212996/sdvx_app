@@ -71,7 +71,7 @@ def return_applicable_songs(results, desig_diff):
     for i in range(len(results)):
         results_box = results[i]
         diff = results_box[1]
-        if(abs(diff) <= desig_diff):
+        if(abs(diff) <= int(desig_diff)):
             applicable_songs.append(results_box)
 
     return applicable_songs
@@ -81,13 +81,16 @@ def select_song_randomly(applicable_songs):
     value = random.randint(0, len(applicable_songs))
     return applicable_songs[value]
 
-# ２人分のスコアツールのユーザー名、難易度、点差の４つが必要
-result_1 = make_scorelist('221sdvx', 19)
-result_2 = make_scorelist('ddr_das', 19)
+def run_selection(user1, user2, difficulty, gap):
+    result_1 = make_scorelist(user1, int(difficulty))
+    result_2 = make_scorelist(user2, int(difficulty))
 
-result = compare_scores(result_1, result_2)
-applicable_songs = return_applicable_songs(result, 10000)
-song = select_song_randomly(applicable_songs)
+    result = compare_scores(result_1, result_2)
+    applicable_songs = return_applicable_songs(result, int(gap))
+    song = select_song_randomly(applicable_songs)
 
-print('選ばれた曲は ' + song[0] + ' です！')
-print('点差は ' + str(song[1]) + ' です！')
+    made_data = {'title':song[0], 'gap':song[1]}
+
+    return made_data
+
+print(run_selection('221sdvx', 'ddr_das', 19, 10000))   
