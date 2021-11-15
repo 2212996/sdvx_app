@@ -81,6 +81,7 @@ def select_song_randomly(applicable_songs):
     value = random.randint(0, len(applicable_songs))
     return applicable_songs[value]
 
+# ２人分のスコアツールのユーザー名、難易度、点差の４つが必要
 result_1 = make_scorelist('221sdvx', 19)
 result_2 = make_scorelist('ddr_das', 19)
 

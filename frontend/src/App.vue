@@ -9,6 +9,12 @@
           label="テキストを入力してください"
           v-model="InputText"
         ></v-textarea>
+        <v-textarea
+          outlined
+          name="input-7-4"
+          label="テキストを入力してください"
+          v-model="InputText2"
+        ></v-textarea>
         </v-col>
         <v-col cols="2">
           <v-btn outlined @click="SendData"> 文字数をカウント </v-btn>
