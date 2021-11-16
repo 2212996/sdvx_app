@@ -4,6 +4,20 @@ from collections import OrderedDict
 import pprint
 import random
 
+def save_from_API(username):
+
+    url = 'https://nearnoah.net/api/showUserData.json?username=' + username
+    response = requests.get(url)
+    rawdata = json.loads(response.text)
+
+    with open(username + '_score.json', 'w') as f:
+        json.dump(rawdata, f, ensure_ascii=False)
+
+def open_json(username):
+    with open(username + '_score.json') as f:
+        rawdata = json.load(f)
+    return rawdata
+
 # 任意のユーザーのスコアリストをAPIのから取得する
 def receive_from_API(username):
 
@@ -68,10 +82,37 @@ def organize_json(rawdata):
     return scorebox
 
 def to_narrowdown_songs(scorebox, minlevel, maxlevel, clearlamp, grade):
-        # レベル→ランプ→グレードの順で絞り込み
+
+    # clearlampの絞り込みが無かった場合、全てにチェックを付ける
+    if(len(clearlamp) == 0):
+        clearlamp = ['NOPLAY', 'CRASH', 'COMP', 'EXCOMP', 'UC', 'PUC']
+
+    # gradeの絞り込みが無かった場合、全てにチェックを付ける
+    if(len(grade) == 0):
+        grade = ['F', 'D', 'C', 'A', 'A+', 'AA', 'AA+', 'AAA', 'AAA+', 'S', '995', '998']
+
+    # 絞り込み
+    for i in range(len(scorebox))[::-1]:
+        tmp_scorebox = scorebox[i]
+        if(
+            not(tmp_scorebox['level'] >= minlevel and tmp_scorebox['level'] <= maxlevel)
+            or (not(tmp_scorebox['clearlamp'] in clearlamp))
+            or (not(tmp_scorebox['grade'] in grade))
+            ):
+            del scorebox[i]
+
+    return scorebox
+
+def cals_scoregap(scorebox1, scorebox2):
+
+    id_1 = []
+    id_2 = []
+
+    for i in range(len(scorebox1)):
+        
 
 
-# def compare_scores():
+
 
 # 以下、テストケース
 
@@ -99,5 +140,16 @@ def to_narrowdown_songs(scorebox, minlevel, maxlevel, clearlamp, grade):
 #                     'volforce': 8},
 #         'title': 'Destr0yer'}]
 
-a = receive_from_API("221sdvx")
-pprint.pprint(organize_json(a))
+# a = receive_from_API("221sdvx")
+
+a = open_json('221sdvx')
+b = organize_json(a)
+
+minlevel = 18
+maxlevel = 18
+clearlamp = ['PER']
+grade = ['S']
+
+c = to_narrowdown_songs(b, minlevel, maxlevel, clearlamp, grade)
+
+pprint.pprint(c)
