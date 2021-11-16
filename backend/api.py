@@ -1,8 +1,8 @@
 import requests
 import json
-from collections import OrderedDict
 import pprint
 import random
+from collections import OrderedDict
 
 # 任意のユーザー名のスコアデータをAPIから取得する関数
 def save_from_API(username):
@@ -61,6 +61,8 @@ def organize_json(rawdata):
                 tmp_chart = tmp_song[diff_rank[j]]
 
                 # 未プレイの場合の処理
+                # タイトル、レベル、難易度は埋める
+                # それ以外は最低値を代入する
                 if('clearlamp' not in tmp_chart):
                     organized_data = {'id': tmp_id,
                         'title': tmp_title,
@@ -88,7 +90,7 @@ def organize_json(rawdata):
     return scorebox
 
 # 絞り込み条件と一致する曲目だけを返す関数
-def to_narrowdown_songs(scorebox, minlevel, maxlevel, clearlamp, grade):
+def to_narrowdown_songs(scorebox, minlevel, maxlevel, clearlamp, grade,difficulty):
 
     # clearlampの絞り込みが無かった場合、全てにチェックを付ける
     if(len(clearlamp) == 0):
@@ -98,13 +100,18 @@ def to_narrowdown_songs(scorebox, minlevel, maxlevel, clearlamp, grade):
     if(len(grade) == 0):
         grade = ['F', 'D', 'C', 'A', 'A+', 'AA', 'AA+', 'AAA', 'AAA+', 'S', '995', '998']
 
-    # 絞り込み
+    # difficultyの絞り込みが無かった場合、全てにチェックを付ける
+    if(len(difficulty) == 0):
+        difficulty = ['novice', 'advanced', 'exhaust', 'infinite', 'gravity', 'heavenly', 'vivid', 'maximum']
+
+    # 条件による絞り込み
     for i in range(len(scorebox))[::-1]:
         tmp_scorebox = scorebox[i]
         if(
             not(tmp_scorebox['level'] >= minlevel and tmp_scorebox['level'] <= maxlevel)
             or not(tmp_scorebox['clearlamp'] in clearlamp)
             or not(tmp_scorebox['grade'] in grade)
+            or not(tmp_scorebox['difficulty'] in difficulty)
             ):
             del scorebox[i]
 
@@ -149,6 +156,7 @@ def cals_scoregap(scorebox1, scorebox2):
     id_1 = make_id_list(scorebox1)
     id_2 = make_id_list(scorebox2)
 
+    # 2つの集合の和集合を返す
     id_intersection = id_1 & id_2
 
     id_listed = list(id_intersection)
@@ -157,6 +165,7 @@ def cals_scoregap(scorebox1, scorebox2):
     scorebox2 = to_narrowdown_byID(scorebox2, id_listed)
 
     scoregap = []
+    # １曲毎の点差を計算する処理
     for i in range(len(scorebox1)):
         user1_song = scorebox1[i]
         user2_song = scorebox2[i]
@@ -175,6 +184,19 @@ def to_narrowdown_byGap(scoregap, gap):
         tmp_scoregap = scoregap[i]
         diff = tmp_scoregap['gap']
         if(abs(diff) <= gap):
+            applicable_songs.append(tmp_scoregap)
+
+    # 返り値は配列
+    return applicable_songs
+
+# 任意の点差範囲を指定して絞り込む
+def to_narrowdown_byGap_revenge(scoregap, gap):
+
+    applicable_songs = []
+    for i in range(len(scoregap)):
+        tmp_scoregap = scoregap[i]
+        diff = tmp_scoregap['gap']
+        if(abs(diff) >= gap):
             applicable_songs.append(tmp_scoregap)
 
     # 返り値は配列
@@ -221,21 +243,23 @@ def select_song_randomly(applicable_songs):
 
 # a = receive_from_API("221sdvx")
 
-# a221 = open_json('221sdvx')
-# b221 = organize_json(a221)
-# adas = open_json('ddr_das')
-# bdas = organize_json(adas)
+a221 = open_json('221sdvx')
+b221 = organize_json(a221)
+adas = open_json('ddr_das')
+bdas = organize_json(adas)
 
-# minlevel = 18
-# maxlevel = 18
-# clearlamp = []
-# grade = []
+minlevel = 18
+maxlevel = 18
+clearlamp = []
+grade = []
+difficulty = []
 
-# c221 = to_narrowdown_songs(b221, minlevel, maxlevel, clearlamp, grade)
-# cdas = to_narrowdown_songs(bdas, minlevel, maxlevel, clearlamp, grade)
+c221 = to_narrowdown_songs(b221, minlevel, maxlevel, clearlamp, grade, difficulty)
+cdas = to_narrowdown_songs(bdas, minlevel, maxlevel, clearlamp, grade, difficulty)
 
-# d = cals_scoregap(c221, cdas)
-# e = to_narrowdown_byGap(d, 10000)
-# f = select_song_randomly(e)
+d = cals_scoregap(c221, cdas)
+e = to_narrowdown_byGap(d, 10000)
+# e = to_narrowdown_byGap_revenge(d, 10000)
+f = select_song_randomly(e)
 
-# print(f)
+print(f)
