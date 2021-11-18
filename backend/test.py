@@ -93,4 +93,4 @@ def run_selection(user1, user2, difficulty, gap):
 
     return made_data
 
-print(run_selection('221sdvx', 'ddr_das', 19, 10000))   
+# print(run_selection('221sdvx', 'ddr_das', 19, 10000))   

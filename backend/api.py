@@ -62,7 +62,7 @@ def organize_json(rawdata):
 
                 # 未プレイの場合の処理
                 # タイトル、レベル、難易度は埋める
-                # それ以外は最低値を代入する
+                # それ以外は
                 if('clearlamp' not in tmp_chart):
                     organized_data = {'id': tmp_id,
                         'title': tmp_title,
@@ -209,6 +209,26 @@ def select_song_randomly(applicable_songs):
     # 返り値は辞書型
     return applicable_songs[value] 
 
+def output(your_id, opp_id, minlevel, maxlevel, difficulty, clearlamp, grade, scoregap):
+
+    your_json = open_json(your_id)
+    opp_json = open_json(opp_id)
+
+    your_data = organize_json(your_json)
+    opp_data = organize_json(opp_json)
+
+    your_songlist = to_narrowdown_songs(your_data, minlevel, maxlevel, clearlamp, grade, difficulty)
+    opp_songlist = to_narrowdown_songs(opp_data, minlevel, maxlevel, clearlamp, grade, difficulty)
+
+    gap_list = cals_scoregap(your_songlist, opp_songlist)
+    narroweddown = to_narrowdown_byGap(gap_list, scoregap)
+
+    result = select_song_randomly(gap_list)
+
+    return result
+
+
+
 #
 #
 #
@@ -243,23 +263,26 @@ def select_song_randomly(applicable_songs):
 
 # a = receive_from_API("221sdvx")
 
-a221 = open_json('221sdvx')
-b221 = organize_json(a221)
-adas = open_json('ddr_das')
-bdas = organize_json(adas)
+# a221 = open_json('221sdvx')
+# b221 = organize_json(a221)
+# adas = open_json('ddr_das')
+# bdas = organize_json(adas)
 
-minlevel = 18
-maxlevel = 18
-clearlamp = []
-grade = []
-difficulty = []
+# minlevel = 18
+# maxlevel = 18
+# clearlamp = []
+# grade = []
+# difficulty = []
 
-c221 = to_narrowdown_songs(b221, minlevel, maxlevel, clearlamp, grade, difficulty)
-cdas = to_narrowdown_songs(bdas, minlevel, maxlevel, clearlamp, grade, difficulty)
+# c221 = to_narrowdown_songs(b221, minlevel, maxlevel, clearlamp, grade, difficulty)
+# cdas = to_narrowdown_songs(bdas, minlevel, maxlevel, clearlamp, grade, difficulty)
 
-d = cals_scoregap(c221, cdas)
-e = to_narrowdown_byGap(d, 10000)
-# e = to_narrowdown_byGap_revenge(d, 10000)
-f = select_song_randomly(e)
+# d = cals_scoregap(c221, cdas)
+# e = to_narrowdown_byGap(d, 10000)
+# f = select_song_randomly(e)
 
-print(f)
+# print(f)
+
+# test = output('221sdvx', 'ddr_das', 19, 19, ['gravity'], ['COMP', 'EXCOMP', 'UC'], ['AAA+', 'S'], 50000)
+
+# print(test)
