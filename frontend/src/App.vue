@@ -1,124 +1,5 @@
 <template>
   <v-app>
-    <v-container fluid>
-      <v-row align="start" justify="center">
-        <v-col cols="10">
-          <v-textarea
-          outlined
-          name="input-7-4"
-          label="自分のユーザーID"
-          v-model="InputUser1"
-          ></v-textarea>
-          <v-textarea
-            outlined
-            name="input-7-4"
-            label="ライバルのユーザーID"
-            v-model="InputUser2"
-          ></v-textarea>
-          <v-textarea
-            outlined
-            name="input-7-4"
-            label="選択する難易度"
-            v-model="InputDifficulty"
-            type="number"
-          ></v-textarea>
-          <v-textarea
-            outlined
-            name="input-7-4"
-            label="スコア差"
-            v-model="InputScoreGap"
-            type="number"
-          ></v-textarea>
-          <v-slider
-            thumb-label
-            max="20"
-            min="1"
-          ></v-slider>
-        </v-col>
-        <v-col
-          cols="12"
-          sm="4"
-          md="4"
-        >
-          <v-checkbox
-            v-model="selected"
-            label="John"
-            value="NOV"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="selected"
-            label="Jacob"
-            value="ADV"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="selected"
-            label="John"
-            value="EXH"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="selected"
-            label="Jacob"
-            value="INF"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="selected"
-            label="Jacob"
-            value="GRV"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="selected"
-            label="John"
-            value="HVN"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="selected"
-            label="Jacob"
-            value="VVD"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="selected"
-            label="Jacob"
-            value="MXM"
-          ></v-checkbox>
-        </v-col>
-        <v-col cols="2">
-          <v-btn outlined @click="SendData"> 文字数をカウント </v-btn>
-        </v-col>
-      </v-row>
-
-      <v-row align="start" justify="center">
-        <v-col cols="6">
-        <v-card
-          max-width="450"
-          class="mx-auto"
-        >
-          <v-toolbar
-            dark
-          >
-            <v-toolbar-title>Result</v-toolbar-title>
-          </v-toolbar>
-
-          <v-list three-line>
-            <template v-for="(item, index) in items">
-              <v-list-item
-                :key="item.title"
-              >
-                <v-list-item-content>
-                  <v-list-item-title >{{ item.title }}</v-list-item-title>
-                  <v-list-item-subtitle> {{ item.gap }} </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider
-                :key="index"
-                :inset="item.inset"
-              ></v-divider>
-            </template>
-          </v-list>
-        </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-
     <v-container>
 
       <v-row>
@@ -232,22 +113,25 @@
         </v-col>
       </v-row>
 
+      <span>{{ current_title }}</span>
+
       <v-list three-line>
-            <template v-for="(item, index) in items">
-              <v-list-item
-                :key="item.title"
-              >
-                <v-list-item-content>
-                  <v-list-item-title >{{ item.title }}</v-list-item-title>
-                  <v-list-item-subtitle> {{ item.gap }} </v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item>
-              <v-divider
-                :key="index"
-                :inset="item.inset"
-              ></v-divider>
-            </template>
-          </v-list>
+        <template v-for="(item, index) in items">
+          <v-list-item
+            v-if="index == items.length-1"
+            :key="item.title"
+          >
+            <v-list-item-content>
+              <v-list-item-title >{{ item.title }}</v-list-item-title>
+              <v-list-item-subtitle> {{ item.gap }} </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+          <v-divider
+            :key="index"
+            :inset="item.inset"
+          ></v-divider>
+        </template>
+      </v-list>
 
     </v-container>
 
@@ -331,13 +215,13 @@ export default {
   methods: {
     SendDatas: function () {
       var data = { your_id: this.your_id,
-       opp_id: this.opp_id,
-       minlevel: this.selected_minlevel,
-       maxlevel: this.selected_maxlevel,
-       difficulty: this.selected_diff,
-       clearmark: this.selected_clearlamp,
-       grade: this.selected_grade,
-       scoregap: this.selected_scoregap}
+        opp_id: this.opp_id,
+        minlevel: this.selected_minlevel,
+        maxlevel: this.selected_maxlevel,
+        difficulty: this.selected_diff,
+        clearmark: this.selected_clearlamp,
+        grade: this.selected_grade,
+        scoregap: this.selected_scoregap}
 
       axios
         .post('/post', data)
