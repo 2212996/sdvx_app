@@ -1,7 +1,7 @@
 <template>
   <v-app>
 
-    <a href="/ransele">GO</a>
+    <a href="/comp">GO</a>
 
   </v-app>
 </template>

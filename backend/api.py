@@ -130,7 +130,7 @@ def to_narrowdown_songs(scorebox, minlevel, maxlevel, clearlamp, grade, difficul
     for i in range(len(scorebox))[::-1]:
         tmp_scorebox = scorebox[i]
         if(
-            not(tmp_scorebox['level'] >= minlevel and tmp_scorebox['level'] <= maxlevel)
+            not(tmp_scorebox['level'] > minlevel and tmp_scorebox['level'] < maxlevel)
             or not(tmp_scorebox['clearlamp'] in clearlamp)
             or not(tmp_scorebox['grade'] in grade)
             or not(tmp_scorebox['difficulty'] in difficulty)
@@ -359,8 +359,8 @@ def output(your_id, opp_id, minlevel, maxlevel, difficulty, clearlamp, grade, sc
 
 # pprint.pprint(f)
 
-test = output('221sdvx', 'ddr_das', 19, 19, [], [], [], 10000)
-print(test)
+# test = output('221sdvx', 'ddr_das', 19, 19, [], [], [], 10000)
+# print(test)
 
 # print(test)
 
